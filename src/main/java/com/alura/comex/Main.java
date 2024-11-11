@@ -47,40 +47,13 @@ public class Main {
             throw new RuntimeException("Error al abrir Scanner para procesar archivo!");
         }
 
-
-        int totalDeProductosVendidos = 0;
-        int totalDePedidosRealizados = 0;
-        BigDecimal montoDeVentas = BigDecimal.ZERO;
-        Pedido pedidoMasBarato = null;
-        Pedido pedidoMasCaro = null;
-
         CategoriasProcesadas categoriasProcesadas = new CategoriasProcesadas();
-        int totalDeCategorias = 0;
-
-        for (int i = 0; i < pedidos.size(); i++) {
-            Pedido pedidoActual = pedidos.get(i);
-
-            if (pedidoActual == null) {
-                break;
-            }
-
-            if (pedidoMasBarato == null || pedidoActual.getPrecio().multiply(new BigDecimal(pedidoActual.getCantidad())).compareTo(pedidoMasBarato.getPrecio().multiply(new BigDecimal(pedidoMasBarato.getCantidad()))) < 0) {
-                pedidoMasBarato = pedidoActual;
-            }
-
-            if (pedidoMasCaro == null || pedidoActual.getPrecio().multiply(new BigDecimal(pedidoActual.getCantidad())).compareTo(pedidoMasCaro.getPrecio().multiply(new BigDecimal(pedidoMasCaro.getCantidad()))) > 0) {
-                pedidoMasCaro = pedidoActual;
-            }
-
-            montoDeVentas = montoDeVentas.add(pedidoActual.getPrecio().multiply(new BigDecimal(pedidoActual.getCantidad())));
-            totalDeProductosVendidos += pedidoActual.getCantidad();
-            totalDePedidosRealizados++;
-
-            if (!categoriasProcesadas.contains(pedidoActual.getCategoria())) {
-              totalDeCategorias++;
-              categoriasProcesadas.add(pedidoActual.getCategoria());
-            }
-        }
+        int totalDeProductosVendidos = totalDePedidosVendidos(pedidos);
+        int totalDePedidosRealizados = totalDePedidosRealizados(pedidos);
+        BigDecimal montoDeVentas = montoDeVentas(pedidos);
+        Pedido pedidoMasBarato = pedidoMasBarato(pedidos);
+        Pedido pedidoMasCaro = pedidoMasCaro(pedidos);
+        int totalDeCategorias = categoriasProcesadas(pedidos, categoriasProcesadas);
 
         System.out.println("#### INFORME DE VALORES TOTALES");
         System.out.printf("- TOTAL DE PEDIDOS REALIZADOS: %s\n", totalDePedidosRealizados);
@@ -89,5 +62,60 @@ public class Main {
         System.out.printf("- MONTO DE VENTAS: %s\n", NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(montoDeVentas.setScale(2, RoundingMode.HALF_DOWN))); //Pueden cambiar el Locale a la moneda de su pais, siguiendo esta documentación: https://www.oracle.com/java/technologies/javase/java8locales.html
         System.out.printf("- PEDIDO MAS BARATO: %s (%s)\n", NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(pedidoMasBarato.getPrecio().multiply(new BigDecimal(pedidoMasBarato.getCantidad())).setScale(2, RoundingMode.HALF_DOWN)), pedidoMasBarato.getProducto());
         System.out.printf("- PEDIDO MAS CARO: %s (%s)\n", NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(pedidoMasCaro.getPrecio().multiply(new BigDecimal(pedidoMasCaro.getCantidad())).setScale(2, RoundingMode.HALF_DOWN)), pedidoMasCaro.getProducto());
+
+
     }
+
+
+    public static int totalDePedidosVendidos(List<Pedido> pedidos){
+        int totalProductos = 0;
+        for (Pedido pedido: pedidos){
+            totalProductos += pedido.getCantidad();
+        }
+        return totalProductos;
+    }
+
+    public static int totalDePedidosRealizados(List<Pedido> pedidos){
+        return pedidos.size();
+    }
+
+    public static Pedido pedidoMasBarato(List<Pedido> pedidos){
+        Pedido pedidoMasBarato = null;
+        for(Pedido pedido : pedidos) {
+            if (pedidoMasBarato == null || pedido.getPrecio().multiply(new BigDecimal(pedido.getCantidad())).compareTo(pedidoMasBarato.getPrecio().multiply(new BigDecimal(pedidoMasBarato.getCantidad()))) < 0) {
+                pedidoMasBarato = pedido;
+            }
+        }
+        return pedidoMasBarato;
+    }
+
+    public static Pedido pedidoMasCaro(List<Pedido> pedidos){
+        Pedido pedidoMasCaro = null;
+        for(Pedido pedido : pedidos) {
+            if (pedidoMasCaro == null || pedido.getPrecio().multiply(new BigDecimal(pedido.getCantidad())).compareTo(pedidoMasCaro.getPrecio().multiply(new BigDecimal(pedidoMasCaro.getCantidad()))) > 0) {
+                pedidoMasCaro = pedido;
+            }
+        }
+        return pedidoMasCaro;
+    }
+
+    public static BigDecimal montoDeVentas(List<Pedido> pedidos){
+        return pedidos.stream().map(pedido -> pedido.getPrecio().multiply(new BigDecimal(pedido.getCantidad())))
+                .reduce(BigDecimal.ZERO, BigDecimal::add);
+    }
+
+    public static int categoriasProcesadas(List<Pedido> pedidos, CategoriasProcesadas categoriasProcesadas){
+        Set<String> categorias = new HashSet<>();
+        for (Pedido pedido : pedidos){
+            if (!categoriasProcesadas.contains(pedido.getCategoria())) {
+                categoriasProcesadas.add(pedido.getCategoria());
+            }
+        }
+        return categoriasProcesadas.size();
+    }
+
+
+
+
+
 }
