@@ -18,17 +18,7 @@ public class Main {
     public static void main(String[] args) throws IOException, URISyntaxException {
         PedidoService pedidoService = new PedidoService();
         ArrayList<Pedido> pedidos = new ArrayList<>();
-
-        try {
-            URL recursoCSV = ClassLoader.getSystemResource("pedidos.csv");
-            Path caminoDelArchivo = Path.of(recursoCSV.toURI());
-            pedidos = pedidoService.procesadorDeCsv(caminoDelArchivo);
-
-        } catch (URISyntaxException e) {
-            throw new RuntimeException("Archivo pedido.csv no localizado!");
-        }
-
-
+        pedidos = pedidoService.procesadorDeCsv();
         int totalDeProductosVendidos = pedidoService.totalDePedidosVendidos(pedidos);
         int totalDePedidosRealizados = pedidoService.totalDePedidosRealizados(pedidos);
         BigDecimal montoDeVentas = pedidoService.montoDeVentas(pedidos);
