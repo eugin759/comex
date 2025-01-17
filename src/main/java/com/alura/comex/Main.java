@@ -82,7 +82,7 @@ public class Main {
             }
         }
 
-        System.out.println("#### INFORME DE VALORES TOTALES");
+//        System.out.println("#### INFORME DE VALORES TOTALES");
         System.out.printf("- TOTAL DE PEDIDOS REALIZADOS: %s\n", totalDePedidosRealizados);
         System.out.printf("- TOTAL DE PRODUCTOS VENDIDOS: %s\n", totalDeProductosVendidos);
         System.out.printf("- TOTAL DE CATEGORIAS: %s\n", totalDeCategorias);
