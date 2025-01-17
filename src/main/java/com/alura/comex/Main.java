@@ -1,5 +1,7 @@
 package com.alura.comex;
 
+import com.alura.comex.service.PedidoService;
+
 import java.io.IOException;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
@@ -14,6 +16,7 @@ import java.util.*;
 public class Main {
 
     public static void main(String[] args) throws IOException, URISyntaxException {
+        PedidoService pedidoService = new PedidoService();
         ArrayList<Pedido> pedidos = new ArrayList<>();
 
         try {
@@ -47,13 +50,13 @@ public class Main {
             throw new RuntimeException("Error al abrir Scanner para procesar archivo!");
         }
 
-        CategoriasProcesadas categoriasProcesadas = new CategoriasProcesadas();
-        int totalDeProductosVendidos = totalDePedidosVendidos(pedidos);
-        int totalDePedidosRealizados = totalDePedidosRealizados(pedidos);
-        BigDecimal montoDeVentas = montoDeVentas(pedidos);
-        Pedido pedidoMasBarato = pedidoMasBarato(pedidos);
-        Pedido pedidoMasCaro = pedidoMasCaro(pedidos);
-        int totalDeCategorias = categoriasProcesadas(pedidos, categoriasProcesadas);
+
+        int totalDeProductosVendidos = pedidoService.totalDePedidosVendidos(pedidos);
+        int totalDePedidosRealizados = pedidoService.totalDePedidosRealizados(pedidos);
+        BigDecimal montoDeVentas = pedidoService.montoDeVentas(pedidos);
+        Pedido pedidoMasBarato = pedidoService.pedidoMasBarato(pedidos);
+        Pedido pedidoMasCaro = pedidoService.pedidoMasCaro(pedidos);
+        int totalDeCategorias = pedidoService.categoriasProcesadas(pedidos);
 
         System.out.println("#### INFORME DE VALORES TOTALES");
         System.out.printf("- TOTAL DE PEDIDOS REALIZADOS: %s\n", totalDePedidosRealizados);
@@ -66,53 +69,6 @@ public class Main {
 
     }
 
-
-    public static int totalDePedidosVendidos(List<Pedido> pedidos){
-        int totalProductos = 0;
-        for (Pedido pedido: pedidos){
-            totalProductos += pedido.getCantidad();
-        }
-        return totalProductos;
-    }
-
-    public static int totalDePedidosRealizados(List<Pedido> pedidos){
-        return pedidos.size();
-    }
-
-    public static Pedido pedidoMasBarato(List<Pedido> pedidos){
-        Pedido pedidoMasBarato = null;
-        for(Pedido pedido : pedidos) {
-            if (pedidoMasBarato == null || pedido.getPrecio().multiply(new BigDecimal(pedido.getCantidad())).compareTo(pedidoMasBarato.getPrecio().multiply(new BigDecimal(pedidoMasBarato.getCantidad()))) < 0) {
-                pedidoMasBarato = pedido;
-            }
-        }
-        return pedidoMasBarato;
-    }
-
-    public static Pedido pedidoMasCaro(List<Pedido> pedidos){
-        Pedido pedidoMasCaro = null;
-        for(Pedido pedido : pedidos) {
-            if (pedidoMasCaro == null || pedido.getPrecio().multiply(new BigDecimal(pedido.getCantidad())).compareTo(pedidoMasCaro.getPrecio().multiply(new BigDecimal(pedidoMasCaro.getCantidad()))) > 0) {
-                pedidoMasCaro = pedido;
-            }
-        }
-        return pedidoMasCaro;
-    }
-
-    public static BigDecimal montoDeVentas(List<Pedido> pedidos){
-        return pedidos.stream().map(pedido -> pedido.getPrecio().multiply(new BigDecimal(pedido.getCantidad())))
-                .reduce(BigDecimal.ZERO, BigDecimal::add);
-    }
-
-    public static int categoriasProcesadas(List<Pedido> pedidos, CategoriasProcesadas categoriasProcesadas){
-        Set<String> categorias = new HashSet<>();
-        for (Pedido pedido : pedidos){
-            if (!categoriasProcesadas.contains(pedido.getCategoria())) {
-                categoriasProcesadas.add(pedido.getCategoria());
-            }
-        }
-        return categoriasProcesadas.size();
-    }
 
 
 
