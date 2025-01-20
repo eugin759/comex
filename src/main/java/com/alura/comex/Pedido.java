@@ -5,6 +5,9 @@ import java.time.LocalDate;
 
 public class Pedido {
 
+    public Pedido() {
+    }
+
     private String categoria;
     private String producto;
     private String cliente;
