@@ -4,20 +4,13 @@ import com.alura.comex.domain.InformeSintetico;
 import com.alura.comex.domain.Pedido;
 import com.alura.comex.service.PedidoService;
 
-import java.io.IOException;
-import java.math.BigDecimal;
-import java.math.RoundingMode;
-import java.net.URISyntaxException;
-import java.text.NumberFormat;
 import java.util.*;
 
 public class Main {
 
-    public static void main(String[] args) throws IOException, URISyntaxException {
+    public static void main(String[] args)  {
         PedidoService pedidoService = new PedidoService();
-        ArrayList<Pedido> pedidos = new ArrayList<>();
-        pedidos = pedidoService.procesadorDeCsv();
-        pedidos.toString();
+        ArrayList<Pedido> pedidos = pedidoService.procesadorDeCsv();
         InformeSintetico informeSintetico = new InformeSintetico(pedidos);
         informeSintetico.imprimirinforme();
     }

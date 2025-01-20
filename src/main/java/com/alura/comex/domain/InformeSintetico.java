@@ -27,17 +27,6 @@ public class InformeSintetico {
         this.totalDeCategorias = pedidoService.categoriasProcesadas(pedidos);
     }
 
-    @Override
-    public String toString() {
-        return "#### INFORME DE VALORES TOTALES" + "\n" +
-                "- TOTAL DE PEDIDOS REALIZADOS:" + totalDePedidosRealizados + "\n" +
-                "- TOTAL DE PRODUCTOS VENDIDOS:" + totalDeProductosVendidos + "\n" +
-                "- MONTO DE VENTAS:" + montoDeVentas + "\n" +
-                "- PEDIDO MAS BARATO:" + pedidoMasBarato + "\n" +
-                "- PEDIDO MAS CARO:" + pedidoMasCaro + "\n" +
-                "- TOTAL DE CATEGORIAS:" + totalDeCategorias + "\n";
-    }
-
     public void imprimirinforme(){
         System.out.println("#### INFORME DE VALORES TOTALES");
         System.out.printf("- TOTAL DE PEDIDOS REALIZADOS: %s\n", totalDePedidosRealizados);
