@@ -13,6 +13,8 @@ public class Main {
         ArrayList<Pedido> pedidos = pedidoService.procesadorDeCsv();
         InformeSintetico informeSintetico = new InformeSintetico(pedidos);
         informeSintetico.imprimirinforme();
+
+
     }
 
 

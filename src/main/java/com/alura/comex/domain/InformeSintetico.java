@@ -5,8 +5,7 @@ import com.alura.comex.service.PedidoService;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.NumberFormat;
-import java.util.List;
-import java.util.Locale;
+import java.util.*;
 
 public class InformeSintetico {
 
@@ -16,6 +15,7 @@ public class InformeSintetico {
     private final Pedido pedidoMasBarato;
     private final Pedido pedidoMasCaro;
     private final int totalDeCategorias;
+    private final Map<String, Integer> clientesFieles;
 
     public InformeSintetico(List<Pedido> pedidos) {
         PedidoService pedidoService = new PedidoService();
@@ -25,6 +25,7 @@ public class InformeSintetico {
         this.pedidoMasBarato = pedidoService.pedidoMasBarato(pedidos);
         this.pedidoMasCaro = pedidoService.pedidoMasCaro(pedidos);
         this.totalDeCategorias = pedidoService.categoriasProcesadas(pedidos);
+        this.clientesFieles = pedidoService.listaDeClientesFieles(pedidos);
     }
 
     public void imprimirinforme(){
@@ -35,7 +36,10 @@ public class InformeSintetico {
         System.out.printf("- MONTO DE VENTAS: %s\n", NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(montoDeVentas.setScale(2, RoundingMode.HALF_DOWN))); //Pueden cambiar el Locale a la moneda de su pais, siguiendo esta documentación: https://www.oracle.com/java/technologies/javase/java8locales.html
         System.out.printf("- PEDIDO MAS BARATO: %s (%s)\n", NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(pedidoMasBarato.getPrecio().multiply(new BigDecimal(pedidoMasBarato.getCantidad())).setScale(2, RoundingMode.HALF_DOWN)), pedidoMasBarato.getProducto());
         System.out.printf("- PEDIDO MAS CARO: %s (%s)\n", NumberFormat.getCurrencyInstance(new Locale("es", "AR")).format(pedidoMasCaro.getPrecio().multiply(new BigDecimal(pedidoMasCaro.getCantidad())).setScale(2, RoundingMode.HALF_DOWN)), pedidoMasCaro.getProducto());
-
+        System.out.println("#### LISTA DE CLIENTES FIELES:");
+        for (Map.Entry<String, Integer> entry : clientesFieles.entrySet()) {
+            System.out.println("Cliente: " + entry.getKey() + ", Pedidos: " + entry.getValue());
+        }
     }
 
 }

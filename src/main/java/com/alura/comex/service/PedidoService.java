@@ -88,4 +88,14 @@ public class PedidoService {
         return pedidos;
     }
 
+    public Map<String, Integer> listaDeClientesFieles(List<Pedido> pedidos) {
+        TreeMap<String, Integer> clientesFieles = new TreeMap<>();
+
+        for (Pedido pedido : pedidos) {
+            clientesFieles.putIfAbsent(pedido.getCliente(), 0);
+            clientesFieles.put(pedido.getCliente(), clientesFieles.get(pedido.getCliente()) + 1);
+        }
+
+        return clientesFieles;
+    }
 }
