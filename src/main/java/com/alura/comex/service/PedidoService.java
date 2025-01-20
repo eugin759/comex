@@ -64,31 +64,6 @@ public class PedidoService {
         return categorias.size();
     }
 
-//    public ArrayList<Pedido> procesadorDeCsv() {
-//        ArrayList<Pedido> pedidos = new ArrayList<>();
-//
-//        try  {
-//            URL recursoCSV = ClassLoader.getSystemResource("pedidos.csv");
-//            CSVReader csvReader = new CSVReader(new FileReader(recursoCSV.getFile()));
-//            String[] nextRecord;
-//            csvReader.readNext(); // Saltar la cabecera
-//
-//            while ((nextRecord = csvReader.readNext()) != null) {
-//                String categoria = nextRecord[0];
-//                String producto = nextRecord[1];
-//                BigDecimal precio = new BigDecimal(nextRecord[2]);
-//                int cantidad = Integer.parseInt(nextRecord[3]);
-//                LocalDate fecha = LocalDate.parse(nextRecord[4], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
-//                String cliente = nextRecord[5];
-//
-//                Pedido pedido = new Pedido(categoria, producto, cliente, precio, cantidad, fecha);
-//                pedidos.add(pedido);
-//            }
-//        } catch (IOException | CsvValidationException e) {
-//            throw new RuntimeException("Error al procesar el archivo CSV: " + e.getMessage());
-//        }
-//        return pedidos;
-//    }
 
     public ArrayList<Pedido> procesadorDeCsv() {
         ArrayList<Pedido> pedidos = new ArrayList<>();
@@ -137,6 +112,34 @@ public class PedidoService {
 
         return clientesFieles;
     }
+
+
+
+//    public ArrayList<Pedido> procesadorDeCsv() {
+//        ArrayList<Pedido> pedidos = new ArrayList<>();
+//
+//        try  {
+//            URL recursoCSV = ClassLoader.getSystemResource("pedidos.csv");
+//            CSVReader csvReader = new CSVReader(new FileReader(recursoCSV.getFile()));
+//            String[] nextRecord;
+//            csvReader.readNext(); // Saltar la cabecera
+//
+//            while ((nextRecord = csvReader.readNext()) != null) {
+//                String categoria = nextRecord[0];
+//                String producto = nextRecord[1];
+//                BigDecimal precio = new BigDecimal(nextRecord[2]);
+//                int cantidad = Integer.parseInt(nextRecord[3]);
+//                LocalDate fecha = LocalDate.parse(nextRecord[4], DateTimeFormatter.ofPattern("dd/MM/yyyy"));
+//                String cliente = nextRecord[5];
+//
+//                Pedido pedido = new Pedido(categoria, producto, cliente, precio, cantidad, fecha);
+//                pedidos.add(pedido);
+//            }
+//        } catch (IOException | CsvValidationException e) {
+//            throw new RuntimeException("Error al procesar el archivo CSV: " + e.getMessage());
+//        }
+//        return pedidos;
+//    }
 
 
 }
