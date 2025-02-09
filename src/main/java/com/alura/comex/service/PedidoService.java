@@ -1,21 +1,13 @@
 package com.alura.comex.service;
 
+import com.alura.comex.domain.ProductoMasCaro;
+import com.alura.comex.domain.ProductoMasVendido;
+import com.alura.comex.domain.VentasPorCategoria;
 import com.alura.comex.domain.Pedido;
 
-import com.fasterxml.jackson.core.type.TypeReference;
-import com.fasterxml.jackson.databind.ObjectMapper;
-import com.fasterxml.jackson.dataformat.xml.XmlMapper;
-import com.fasterxml.jackson.datatype.jsr310.JavaTimeModule;
-import com.opencsv.CSVReader;
-import com.opencsv.exceptions.CsvValidationException;
-import java.io.FileReader;
-import java.io.IOException;
-import java.io.InputStream;
 import java.math.BigDecimal;
-import java.net.URL;
-import java.time.LocalDate;
-import java.time.format.DateTimeFormatter;
 import java.util.*;
+import java.util.stream.Collectors;
 
 public class PedidoService {
 
@@ -78,5 +70,67 @@ public class PedidoService {
 
         return clientesFieles;
     }
+
+    public List<VentasPorCategoria> informesDeVentasPorCategoria(List<Pedido> pedidos) {
+
+        Map<String, List<Pedido>> pedidosPorCategoria = pedidos.stream()
+                .collect(Collectors.groupingBy(Pedido::getCategoria));
+
+        return pedidosPorCategoria.entrySet().stream()
+                .map(entry -> {
+                    String categoria = entry.getKey();
+                    List<Pedido> pedidosDeCategoria = entry.getValue();
+
+                    int cantidadVendida = pedidosDeCategoria.stream()
+                            .mapToInt(Pedido::getCantidad)
+                            .sum();
+
+                    BigDecimal montoVendido = pedidosDeCategoria.stream()
+                            .map(pedido -> pedido.getPrecio().multiply(new BigDecimal(pedido.getCantidad())))
+                            .reduce(BigDecimal.ZERO, BigDecimal::add);
+
+                    return new VentasPorCategoria(categoria, cantidadVendida, montoVendido);
+                })
+                .sorted(Comparator.comparing(VentasPorCategoria::getCategoria))
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductoMasVendido> informeDeProductosMasVendidos(List<Pedido> pedidos) {
+
+        Map<String, Integer> cantidadVendidaPorProducto = pedidos.stream()
+                .collect(Collectors.groupingBy(Pedido::getProducto, Collectors.summingInt(Pedido::getCantidad)));
+
+        return cantidadVendidaPorProducto.entrySet().stream()
+                .map(entry -> new ProductoMasVendido(entry.getKey(), entry.getValue()))
+                .sorted(Comparator.comparingInt(ProductoMasVendido::getCantidad).reversed())
+                .limit(3)
+                .collect(Collectors.toList());
+    }
+
+    public List<ProductoMasCaro> informeDeProductosMasCarosPorCategoria(List<Pedido> pedidos) {
+
+        Map<String, List<Pedido>> pedidosPorCategoria = pedidos.stream()
+                .collect(Collectors.groupingBy(Pedido::getCategoria));
+
+        return pedidosPorCategoria.entrySet().stream()
+                .map(entry -> {
+                    String categoria = entry.getKey();
+                    List<Pedido> pedidosDeCategoria = entry.getValue();
+
+                    Pedido productoMasCaro = pedidosDeCategoria.stream()
+                            .max(Comparator.comparing(Pedido::getPrecio))
+                            .orElse(null); // Manejar el caso de que no haya pedidos en la categoría
+
+                    if (productoMasCaro != null) {
+                        return new ProductoMasCaro(categoria, productoMasCaro.getProducto(), productoMasCaro.getPrecio());
+                    } else {
+                        return null; // O podrías devolver un objeto especial que indique que no hay productos
+                    }
+                })
+                .filter(Objects::nonNull) // Eliminar los resultados nulos (si se decide manejar así)
+                .sorted(Comparator.comparing(ProductoMasCaro::getCategoria))
+                .collect(Collectors.toList());
+    }
+
 
 }

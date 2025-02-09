@@ -7,17 +7,15 @@ import com.alura.comex.procesadorDePedidos.ProcesadorCsv;
 import com.alura.comex.procesadorDePedidos.ProcesadorDePedidos;
 import com.alura.comex.procesadorDePedidos.ProcesadorJson;
 import com.alura.comex.procesadorDePedidos.ProcesadorXml;
-import com.alura.comex.service.PedidoService;
 
 import java.util.*;
 
 public class Main {
 
     public static void main(String[] args)  {
-        PedidoService pedidoService = new PedidoService();
-        //ProcesadorDePedidos procesador = new ProcesadorCsv();
+        ProcesadorDePedidos procesador = new ProcesadorCsv();
         //ProcesadorDePedidos procesador = new ProcesadorJson();
-        ProcesadorDePedidos procesador = new ProcesadorXml();
+        //ProcesadorDePedidos procesador = new ProcesadorXml();
         ArrayList<Pedido> pedidos = procesador.procesarPedidos();
         CommandExecutor executor = new CommandExecutor(pedidos);
         executor.executeCommand(new TotalDePedidosRealizadosCommand());
@@ -27,6 +25,9 @@ public class Main {
         executor.executeCommand(new PedidoMasBaratoCommand());
         executor.executeCommand(new PedidoMasCaroCommand());
         executor.executeCommand(new ListaDeClientesFielesCommand());
+        executor.executeCommand(new InformeDeVentasPorCategoriaCommand());
+        executor.executeCommand(new InformeDeProductosMasVendidos());
+        executor.executeCommand(new InformeDeProductosMasCarosPorCategoria());
        // InformeSintetico informeSintetico = new InformeSintetico(pedidos);
         //informeSintetico.imprimirinforme();
     }
