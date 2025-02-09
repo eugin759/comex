@@ -11,8 +11,9 @@ public class Main {
 
     public static void main(String[] args)  {
         PedidoService pedidoService = new PedidoService();
-        ArrayList<Pedido> pedidos = pedidoService.procesadorDeCsv();
+        //ArrayList<Pedido> pedidos = pedidoService.procesadorDeCsv();
         //ArrayList<Pedido> pedidos = pedidoService.procesadorDeJson();
+        ArrayList<Pedido> pedidos = pedidoService.procesadorDeXml();
         CommandExecutor executor = new CommandExecutor(pedidos);
         executor.executeCommand(new TotalDePedidosRealizadosCommand());
         executor.executeCommand(new TotalDeProductosVendidosCommand());
