@@ -6,7 +6,7 @@ import com.alura.comex.service.PedidoService;
 
 import java.util.List;
 
-public class InformeDeProductosMasVendidos implements Command{
+public class InformeDeProductosMasVendidosCommand implements Command{
     @Override
     public void execute(List<Pedido> pedidos) {
         PedidoService pedidoService = new PedidoService();

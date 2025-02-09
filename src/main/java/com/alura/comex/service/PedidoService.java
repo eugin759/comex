@@ -72,7 +72,9 @@ public class PedidoService {
     }
 
     public List<VentasPorCategoria> informesDeVentasPorCategoria(List<Pedido> pedidos) {
-
+        if (pedidos == null || pedidos.isEmpty()) {
+            throw new IllegalArgumentException("La lista de pedidos no puede estar vacía.");
+        }
         Map<String, List<Pedido>> pedidosPorCategoria = pedidos.stream()
                 .collect(Collectors.groupingBy(Pedido::getCategoria));
 
@@ -96,7 +98,9 @@ public class PedidoService {
     }
 
     public List<ProductoMasVendido> informeDeProductosMasVendidos(List<Pedido> pedidos) {
-
+        if (pedidos == null || pedidos.isEmpty()) {
+            throw new IllegalArgumentException("La lista de pedidos no puede estar vacía.");
+        }
         Map<String, Integer> cantidadVendidaPorProducto = pedidos.stream()
                 .collect(Collectors.groupingBy(Pedido::getProducto, Collectors.summingInt(Pedido::getCantidad)));
 
@@ -108,7 +112,9 @@ public class PedidoService {
     }
 
     public List<ProductoMasCaro> informeDeProductosMasCarosPorCategoria(List<Pedido> pedidos) {
-
+        if (pedidos == null || pedidos.isEmpty()) {
+            throw new IllegalArgumentException("La lista no puede estar vacía.");
+        }
         Map<String, List<Pedido>> pedidosPorCategoria = pedidos.stream()
                 .collect(Collectors.groupingBy(Pedido::getCategoria));
 
