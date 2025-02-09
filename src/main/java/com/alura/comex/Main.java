@@ -12,6 +12,7 @@ public class Main {
     public static void main(String[] args)  {
         PedidoService pedidoService = new PedidoService();
         ArrayList<Pedido> pedidos = pedidoService.procesadorDeCsv();
+        //ArrayList<Pedido> pedidos = pedidoService.procesadorDeJson();
         CommandExecutor executor = new CommandExecutor(pedidos);
         executor.executeCommand(new TotalDePedidosRealizadosCommand());
         executor.executeCommand(new TotalDeProductosVendidosCommand());
@@ -20,7 +21,7 @@ public class Main {
         executor.executeCommand(new PedidoMasBaratoCommand());
         executor.executeCommand(new PedidoMasCaroCommand());
         executor.executeCommand(new ListaDeClientesFielesCommand());
-        InformeSintetico informeSintetico = new InformeSintetico(pedidos);
-        informeSintetico.imprimirinforme();
+       // InformeSintetico informeSintetico = new InformeSintetico(pedidos);
+        //informeSintetico.imprimirinforme();
     }
 }

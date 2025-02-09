@@ -1,5 +1,7 @@
 package com.alura.comex.domain;
 
+import com.fasterxml.jackson.annotation.JsonFormat;
+
 import java.math.BigDecimal;
 import java.time.LocalDate;
 
@@ -12,7 +14,11 @@ public class Pedido {
     private BigDecimal precio;
     private int cantidad;
 
+    @JsonFormat(pattern = "dd/MM/yyyy")
     private LocalDate fecha;
+
+    public Pedido() {
+    }
 
     public Pedido(String categoria, String producto, String cliente, BigDecimal precio, int cantidad, LocalDate fecha) {
         this.categoria = categoria;
